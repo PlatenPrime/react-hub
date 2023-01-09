@@ -8,14 +8,20 @@ import { useReducer } from 'react';
 // Редьюсер хранит сборище всех видов функций, которые мы можем применить к состоянию
 
 function reducer(state, action) {
-	if (action.type === 'incremented_age') {
-		return {
-			age: state.age + 1
-		};
-	}
-	throw Error('Unknown action.');
-}
 
+	switch (action.type) {
+		case 'incremented_age': {
+			return {
+				age: state.age + 1
+			};
+		}
+		default: {
+			throw Error('Unknown action: ' + action.type);
+		}
+
+
+	}
+}
 
 
 
