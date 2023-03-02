@@ -1,14 +1,15 @@
 
 import './App.css';
+import Counter from './hooks/contextapi/Counter.js';
+import { StoreProvider } from './store';
 
 
 
 function App() {
 	return (
-		<div className="App">
-			React
-
-		</div>
+		<StoreProvider>
+			<Counter />
+		</StoreProvider>
 	);
 }
 
