@@ -3,16 +3,15 @@ import { useEffect } from 'react';
 
 const TestComponent = () => {
 
-	const [count, setCount] = useState(0);
-	const [fax, setFax] = useState(1);
+	const [count, setCount] = useState(1);
 
 
 
 	function start() {
 		let interval = setInterval(() => {
 			setCount(count => {
-				if (count < 10) {
-					console.log("Count change")
+				if (count < 11) {
+					console.log(`Count change ${count}`)
 					return count + 1;
 				} else {
 					clearInterval(interval);
