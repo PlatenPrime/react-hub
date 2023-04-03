@@ -7,8 +7,8 @@ const RingComponent = () => {
 	const sectorAngle = 360 / sectorCount;
 
 	return (
-		<div className="flex flex-col items-center">
-			<svg viewBox="0 0 100 100" className="w-48 h-48">
+		<div className="flex flex-col items-center  ">
+			<svg viewBox="0 0 100 100" className="w-1/3 h-1/3 shadow-2xl  ">
 				{[...Array(sectorCount)].map((_, i) => {
 					const startAngle = sectorAngle * i;
 					const endAngle = startAngle + sectorAngle;
@@ -18,7 +18,7 @@ const RingComponent = () => {
 						<path
 							key={i}
 							d={describeSector(50, 50, 40, startAngle, endAngle)}
-							fill={isBlue ? 'blue' : 'orange'}
+							fill={isBlue ? 'red' : 'lightgray'}
 						/>
 					);
 				})}
