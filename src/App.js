@@ -1,5 +1,6 @@
 
 import './App.css';
+import FetchArts from './components/FetchArts';
 import Counter from './hooks/contextapi/Counter.js';
 import RingComponent from './RingComponent';
 import { StoreProvider } from './store';
@@ -14,8 +15,8 @@ function App() {
 		// </StoreProvider>
 
 		<>
-			<TestComponent />
-			
+			<FetchArts />
+
 		</>
 	);
 }
