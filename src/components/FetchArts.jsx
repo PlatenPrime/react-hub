@@ -26,7 +26,7 @@ const FetchArts = () => {
 
 
 	const getResponseString = () => {
-		fetch(apiUrl)
+		fetch(requestUrl)
 			.then(response => response.text())
 			.then(data => {
 				setResponseString(data); // set the response string in state
