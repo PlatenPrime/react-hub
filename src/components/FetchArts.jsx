@@ -1,4 +1,4 @@
-import axios from 'axios';
+
 import React, { useState } from 'react';
 
 const FetchArts = () => {
@@ -13,11 +13,13 @@ const FetchArts = () => {
 
 	const searchValue = "У наявності"
 
-	const baseUrl = "https://sharik.ua/ua/search/?q=";
-	const apiUrl = `${baseUrl}${art}`;
+	const baseUrl = "https://sharik.ua/ua";
+	const apiRequest = `/search/?q=${art}`
 
-	const proxyUrl = 'http://localhost:8080'; // Your cors-anywhere server URL
-	const requestUrl = `${proxyUrl}/${apiUrl}`;
+
+	const apiUrl = `${baseUrl}${apiRequest}`;
+
+
 
 
 
@@ -26,7 +28,7 @@ const FetchArts = () => {
 
 
 	const getResponseString = () => {
-		fetch(requestUrl)
+		fetch(apiUrl)
 			.then(response => response.text())
 			.then(data => {
 				setResponseString(data); // set the response string in state
