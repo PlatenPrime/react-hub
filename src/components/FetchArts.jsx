@@ -8,7 +8,11 @@ const FetchArts = () => {
 	const [art, setArt] = useState("1102-0260")
 	const [index, setIndex] = useState(null)
 
+	const [rows, setRows] = useState("");
 
+
+
+	const urlCA = 'https://corsproxy.io/?';
 
 
 	const searchValue = "У наявності"
@@ -19,7 +23,19 @@ const FetchArts = () => {
 
 	const apiUrl = `${baseUrl}${apiRequest}`;
 
+	const corsUrl = urlCA + apiUrl
 
+
+	const getRows = () => {
+		fetch("https://btw-server.up.railway.app/api/rows")
+			.then(response => response.text())
+			.then(data => {
+				setRows(data); // set the response string in state
+			})
+			.catch(error => {
+				console.error(error);
+			});
+	}
 
 
 
@@ -28,7 +44,7 @@ const FetchArts = () => {
 
 
 	const getResponseString = () => {
-		fetch(apiUrl)
+		fetch(corsUrl)
 			.then(response => response.text())
 			.then(data => {
 				setResponseString(data); // set the response string in state
@@ -76,11 +92,15 @@ const FetchArts = () => {
 			<button onClick={getQuant} className='text-white bg-blue-600 p-2 w-fit mx-auto' >Получить количество</button>
 
 
+			<button onClick={getRows} className='text-white bg-blue-600 p-2 w-fit mx-auto' >Получить ряды</button>
+
+
 			<p className='border border-rose-600 p-2' > Артикул:{art}</p>
 			{/* <p>{responseString}</p> */}
 			<p className='border border-rose-600 p-2' > Длина полученной строки HTTP:{responseString.length}</p>
 			<p className='border border-teal-600 p-2' > Индекс элемента "В наявності":{index}</p>
 			<p className='border border-blue-600 p-2' > Количество артикула на остатке:  {quant}</p>
+			<p className='border border-blue-600 p-2' > Ряды:  {rows}</p>
 
 		</div>
 	);
