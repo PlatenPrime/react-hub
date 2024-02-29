@@ -10,14 +10,7 @@ import TestComponent from './TestComponent';
 
 function App() {
 	return (
-		// <StoreProvider>
-		// 	<Counter />
-		// </StoreProvider>
-
-		<>
-			<FetchArts />
-
-		</>
+		<></>
 	);
 }
 
