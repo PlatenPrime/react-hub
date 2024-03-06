@@ -1,48 +1,91 @@
-import { convertToRaw, EditorState } from "draft-js";
-import { useState } from "react";
-import { Editor } from "react-draft-wysiwyg";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import draftToHtml from "draftjs-to-html";
-import { Fragment } from "react";
-export default function Index() {
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const [text, setText] = useState();
-  const onEditorStateChange = function (editorState) {
-    setEditorState(editorState);
-    const { blocks } = convertToRaw(editorState.getCurrentContent());
-    /*let text = blocks.reduce((acc, item) => {
-      acc = acc + item.text;
-      return acc;
-    }, "");*/
-    let text = editorState.getCurrentContent().getPlainText("\u0001");
-    setText(text);
-  };
+import React, { useState } from 'react';
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import axios from 'axios';
 
-  return (
-    <>
-      {/*<div>{draftToHtml(convertToRaw(editorState.getCurrentContent()))}</div>*/}
-      {<div style={{ height: "80px", overflow: "auto" }}>{text}</div>}
-      <Editor
-        editorState={editorState}
-        toolbarClassName="toolbarClassName"
-        wrapperClassName="wrapperClassName"
-        editorClassName="editorClassName"
-        onEditorStateChange={onEditorStateChange}
-        mention={{
-          separator: " ",
-          trigger: "@",
-          suggestions: [
-            { text: "APPLE", value: "apple" },
-            { text: "BANANA", value: "banana", url: "banana" },
-            { text: "CHERRY", value: "cherry", url: "cherry" },
-            { text: "DURIAN", value: "durian", url: "durian" },
-            { text: "EGGFRUIT", value: "eggfruit", url: "eggfruit" },
-            { text: "FIG", value: "fig", url: "fig" },
-            { text: "GRAPEFRUIT", value: "grapefruit", url: "grapefruit" },
-            { text: "HONEYDEW", value: "honeydew", url: "honeydew" }
-          ]
-        }}
-      />
-    </>
-  );
-}
+ const MyEditorComponent = () => {
+	const [editorState, setEditorState] = useState(EditorState.createEmpty());
+
+	// Функция для обновления состояния редактора при вводе текста
+	const handleEditorStateChange = (newEditorState) => {
+		setEditorState(newEditorState);
+	};
+
+	// Функция для сохранения содержимого редактора в базу данных MongoDB
+	const saveContentToMongoDB = async () => {
+		try {
+			const contentState = editorState.getCurrentContent();
+			const rawContent = convertToRaw(contentState);
+
+			// Отправляем данные на сервер для сохранения в базу MongoDB
+			const response = await axios.post('/api/saveContent', {
+				content: JSON.stringify(rawContent),
+			});
+
+			if (response.data.success) {
+				console.log('Содержимое успешно сохранено в базу MongoDB.');
+			} else {
+				console.error('Ошибка при сохранении содержимого в базу MongoDB:', response.data.error);
+			}
+		} catch (error) {
+			console.error('Произошла ошибка:', error);
+		}
+	};
+
+	// Функция для загрузки содержимого из базы MongoDB в редактор
+	const loadContentFromMongoDB = async () => {
+		try {
+			// Получаем данные из сервера, содержащие сохраненное содержимое
+			const response = await axios.get('/api/getContent');
+			const { content } = response.data;
+
+			// Преобразуем полученное содержимое из JSON в объект Draft.js и устанавливаем его в редактор
+			const contentState = convertFromRaw(JSON.parse(content));
+			const newEditorState = EditorState.createWithContent(contentState);
+			setEditorState(newEditorState);
+
+			console.log('Содержимое успешно загружено из базы MongoDB.');
+		} catch (error) {
+			console.error('Произошла ошибка:', error);
+		}
+	};
+
+	return (
+		<div>
+			<Editor
+				editorState={editorState}
+				onEditorStateChange={handleEditorStateChange}
+				toolbar={{
+					options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'link', 'embedded', 'emoji', 'image', 'remove', 'history'],
+					inline: {
+						options: ['bold', 'italic', 'underline', 'strikethrough'],
+					},
+					blockType: {
+						inDropdown: true,
+						options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'],
+					},
+					fontSize: {
+						options: [8, 10, 12, 14, 16, 18, 24, 30, 36, 48, 60, 72, 96],
+					},
+					fontFamily: {
+						options: ['Arial', 'Georgia', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana'],
+					},
+					textAlign: {
+						inDropdown: true,
+					},
+					list: {
+						inDropdown: true,
+					},
+					history: {
+						inDropdown: true,
+					},
+				}}
+			/>
+			<button onClick={saveContentToMongoDB}>Сохранить содержимое в MongoDB</button>
+			<button onClick={loadContentFromMongoDB}>Загрузить содержимое из MongoDB</button>
+		</div>
+	);
+};
+
+export default MyEditorComponent;
