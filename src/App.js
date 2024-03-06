@@ -1,16 +1,16 @@
 
+
 import './App.css';
-import FetchArts from './components/FetchArts';
-import Counter from './hooks/contextapi/Counter.js';
-import RingComponent from './RingComponent';
-import { StoreProvider } from './store';
-import TestComponent from './TestComponent';
+import MyEditor from './components/Editor';
+
 
 
 
 function App() {
 	return (
-		<></>
+		<>
+			<MyEditor />
+		</>
 	);
 }
 
