@@ -4,7 +4,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import axios from 'axios';
 
- const MyEditorComponent = () => {
+const MyEditorComponent = () => {
 	const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
 	// Функция для обновления состояния редактора при вводе текста
@@ -17,6 +17,9 @@ import axios from 'axios';
 		try {
 			const contentState = editorState.getCurrentContent();
 			const rawContent = convertToRaw(contentState);
+			console.log(rawContent);
+			console.log(JSON.stringify(rawContent));
+
 
 			// Отправляем данные на сервер для сохранения в базу MongoDB
 			const response = await axios.post('/api/saveContent', {
@@ -56,6 +59,9 @@ import axios from 'axios';
 			<Editor
 				editorState={editorState}
 				onEditorStateChange={handleEditorStateChange}
+				wrapperClassName="wrapper-class"
+				editorClassName="editor-class"
+				toolbarClassName="toolbar-class"
 				toolbar={{
 					options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'link', 'embedded', 'emoji', 'image', 'remove', 'history'],
 					inline: {
