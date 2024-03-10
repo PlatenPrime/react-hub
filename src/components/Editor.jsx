@@ -88,8 +88,13 @@ const MyEditorComponent = () => {
 					},
 				}}
 			/>
-			<button onClick={saveContentToMongoDB}>Сохранить содержимое в MongoDB</button>
-			<button onClick={loadContentFromMongoDB}>Загрузить содержимое из MongoDB</button>
+
+			<div
+			className="flex flex-col items-center space-y-2 p-2"
+			>
+				<button onClick={saveContentToMongoDB} className="bg-green-500 rounded " >Сохранить содержимое в MongoDB</button>
+				<button onClick={loadContentFromMongoDB} className="bg-sky-500 rounded " >Загрузить содержимое из MongoDB</button>
+			</div>
 		</div>
 	);
 };
