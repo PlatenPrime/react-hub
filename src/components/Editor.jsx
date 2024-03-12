@@ -17,7 +17,7 @@ const MyEditorComponent = () => {
 		try {
 			const contentState = editorState.getCurrentContent();
 			const rawContent = convertToRaw(contentState);
-			
+
 
 
 			// Отправляем данные на сервер для сохранения в базу MongoDB
@@ -29,7 +29,7 @@ const MyEditorComponent = () => {
 
 			});
 
-	
+
 		} catch (error) {
 			console.error('Произошла ошибка:', error);
 		}
@@ -49,14 +49,14 @@ const MyEditorComponent = () => {
 				body: JSON.stringify(rawContent),
 			});
 			console.log(response);
-			
 
-			
 
-			
-		}catch (error) {
+
+
+
+		} catch (error) {
 			console.error('Произошла ошибка:', error);
-			
+
 		}
 	}
 
@@ -87,6 +87,55 @@ const MyEditorComponent = () => {
 		}
 	};
 
+
+
+
+
+
+
+
+
+	const uploadImageCallback = async (file) => {
+		const formData = new FormData();
+		formData.append('image', file);
+
+		try {
+			const response = await fetch('https://api.imgur.com/3/image', {
+				method: 'POST',
+				headers: {
+					Authorization: 'Client-ID 9ed4f78e2cc6eb0', // Вставьте ваш Client ID Imgur
+				},
+				body: formData,
+			});
+
+			if (!response.ok) {
+				throw Error(response.statusText);
+			}
+
+			console.log(response);
+			
+
+			const data = await response.json();
+			return { data: { link: data.data.link } };
+		} catch (error) {
+			console.error('Error uploading image to Imgur:', error);
+			return { error: 'Failed to upload image' };
+		}
+	};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	return (
 		<div>
 			<Editor
@@ -96,6 +145,10 @@ const MyEditorComponent = () => {
 				editorClassName="editor-class"
 				toolbarClassName="toolbar-class"
 				toolbar={{
+					image: {
+						uploadCallback: uploadImageCallback,
+						alt: { present: true, mandatory: true },
+					},
 					options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'link', 'embedded', 'emoji', 'image', 'remove', 'history'],
 					inline: {
 						options: ['bold', 'italic', 'underline', 'strikethrough'],
