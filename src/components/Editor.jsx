@@ -13,38 +13,71 @@ const MyEditorComponent = () => {
 	};
 
 	// Функция для сохранения содержимого редактора в базу данных MongoDB
-	const saveContentToMongoDB = async () => {
+	const createContentToMongoDB = async () => {
 		try {
 			const contentState = editorState.getCurrentContent();
 			const rawContent = convertToRaw(contentState);
-			console.log(rawContent);
-			console.log(JSON.stringify(rawContent));
+			
 
 
 			// Отправляем данные на сервер для сохранения в базу MongoDB
-			const response = await axios.post('/api/saveContent', {
-				content: JSON.stringify(rawContent),
+			const response = await axios.post('https://btw-server.up.railway.app/api/ins', {
+				title: "Test instruction",
+				body: JSON.stringify(rawContent),
+				category: "reglament",
+				department: "Truba"
+
 			});
 
-			if (response.data.success) {
-				console.log('Содержимое успешно сохранено в базу MongoDB.');
-			} else {
-				console.error('Ошибка при сохранении содержимого в базу MongoDB:', response.data.error);
-			}
+	
 		} catch (error) {
 			console.error('Произошла ошибка:', error);
 		}
 	};
 
+
+
+	const saveInsToMongoDB = async () => {
+		try {
+
+			const contentState = editorState.getCurrentContent();
+			const rawContent = convertToRaw(contentState);
+
+
+			// Отправляем данные на сервер для сохранения в базу MongoDB
+			const response = await axios.put('https://btw-server.up.railway.app/api/ins/65efdbf0eaaf0c8dea5fdd33', {
+				body: JSON.stringify(rawContent),
+			});
+			console.log(response);
+			
+
+			
+
+			
+		}catch (error) {
+			console.error('Произошла ошибка:', error);
+			
+		}
+	}
+
+
+
+
+
 	// Функция для загрузки содержимого из базы MongoDB в редактор
 	const loadContentFromMongoDB = async () => {
 		try {
 			// Получаем данные из сервера, содержащие сохраненное содержимое
-			const response = await axios.get('/api/getContent');
-			const { content } = response.data;
+			const response = await axios.get('https://btw-server.up.railway.app/api/ins/65efdbf0eaaf0c8dea5fdd33');
+			console.log(response.data);
+
+			const { body } = response.data;
+
+			console.log(body);
+
 
 			// Преобразуем полученное содержимое из JSON в объект Draft.js и устанавливаем его в редактор
-			const contentState = convertFromRaw(JSON.parse(content));
+			const contentState = convertFromRaw(JSON.parse(body));
 			const newEditorState = EditorState.createWithContent(contentState);
 			setEditorState(newEditorState);
 
@@ -90,10 +123,11 @@ const MyEditorComponent = () => {
 			/>
 
 			<div
-			className="flex flex-col items-center space-y-2 p-2"
+				className="flex flex-col items-center space-y-2 p-2"
 			>
-				<button onClick={saveContentToMongoDB} className="bg-green-500 rounded " >Сохранить содержимое в MongoDB</button>
+				<button onClick={createContentToMongoDB} className="bg-green-500 rounded " >Создать новую инструкцию в MongoDB</button>
 				<button onClick={loadContentFromMongoDB} className="bg-sky-500 rounded " >Загрузить содержимое из MongoDB</button>
+				<button onClick={saveInsToMongoDB} className="bg-emerald-500 rounded " > Сохранить изменения в MongoDB</button>
 			</div>
 		</div>
 	);
