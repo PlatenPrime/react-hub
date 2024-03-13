@@ -103,7 +103,7 @@ const MyEditorComponent = () => {
 			const response = await fetch('https://api.imgur.com/3/image', {
 				method: 'POST',
 				headers: {
-					Authorization: 'Client-ID 9ed4f78e2cc6eb0', // Вставьте ваш Client ID Imgur
+					Authorization: 'Client-ID 1db65d3bddf681a', // Вставьте ваш Client ID Imgur
 				},
 				body: formData,
 			});
@@ -145,10 +145,10 @@ const MyEditorComponent = () => {
 				editorClassName="editor-class"
 				toolbarClassName="toolbar-class"
 				toolbar={{
-					image: {
-						uploadCallback: uploadImageCallback,
-						alt: { present: true, mandatory: true },
-					},
+					// image: {
+					// 	uploadCallback: uploadImageCallback,
+					// 	alt: { present: true, mandatory: true },
+					// },
 					options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'link', 'embedded', 'emoji', 'image', 'remove', 'history'],
 					inline: {
 						options: ['bold', 'italic', 'underline', 'strikethrough'],
