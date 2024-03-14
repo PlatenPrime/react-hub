@@ -3,8 +3,7 @@ import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import axios from 'axios';
-import { FcSmartphoneTablet } from "react-icons/fc";
-import { AiFillAlipayCircle } from "react-icons/ai";
+
 
 const MyEditorComponent = () => {
 	const [editorState, setEditorState] = useState(EditorState.createEmpty());
