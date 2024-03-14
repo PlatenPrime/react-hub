@@ -14,7 +14,13 @@ function App() {
 			<header className="App-header">
 				Rich Text Editor Example
 			</header>
-			<MyEditor />
+
+			<div
+			className="w-1/2 flex justify-center mx-auto"
+			>
+				<MyEditor />
+			</div>
+
 		</div>
 	)
 }

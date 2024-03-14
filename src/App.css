@@ -20,17 +20,18 @@
 
    .wrapper-class {
 	padding: 1rem;
-	border: 1px solid #0ba4d3;
-	background-color: #010029;
+	
+	background-color: #0f172a;
 	border-radius: 20px;
   }
   .editor-class {
-	background-color:rgb(8, 12, 61);
+	background-color:rgb(30 41 59);
 	padding: 1rem;
-	border: 1px solid #339ff7;
+	
 	color: aliceblue;
 	border-radius: 20px;
   }
   .toolbar-class {
 	border: 1px solid #0fd319;
+	background: #0f172a;
   }

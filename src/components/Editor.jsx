@@ -3,6 +3,8 @@ import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import axios from 'axios';
+import { FcSmartphoneTablet } from "react-icons/fc";
+import { AiFillAlipayCircle } from "react-icons/ai";
 
 const MyEditorComponent = () => {
 	const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -113,7 +115,7 @@ const MyEditorComponent = () => {
 			}
 
 			console.log(response);
-			
+
 
 			const data = await response.json();
 			return { data: { link: data.data.link } };
@@ -153,10 +155,10 @@ const MyEditorComponent = () => {
 					inline: {
 						options: ['bold', 'italic', 'underline', 'strikethrough'],
 					},
-					blockType: {
-						inDropdown: true,
-						options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'],
-					},
+					// blockType: {
+					// 	inDropdown: true,
+					// 	options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'],
+					// },
 					fontSize: {
 						options: [8, 10, 12, 14, 16, 18, 24, 30, 36, 48, 60, 72, 96],
 					},
@@ -172,15 +174,25 @@ const MyEditorComponent = () => {
 					history: {
 						inDropdown: true,
 					},
+					colorPicker: {
+						// icon:  <AiFillAlipayCircle />,
+						className: undefined,
+						component: undefined,
+						popupClassName: undefined,
+						colors: ['rgb(239 68 68)', 'rgb(0 0 0)', 'rgb(255 255 255)', 'rgb(248 250 252)' ],
+					},
+
+
+
 				}}
 			/>
 
 			<div
-				className="flex flex-col items-center space-y-2 p-2"
+				className="grid grid-cols-3 gap-2 p-2"
 			>
-				<button onClick={createContentToMongoDB} className="bg-green-500 rounded " >Создать новую инструкцию в MongoDB</button>
-				<button onClick={loadContentFromMongoDB} className="bg-sky-500 rounded " >Загрузить содержимое из MongoDB</button>
-				<button onClick={saveInsToMongoDB} className="bg-emerald-500 rounded " > Сохранить изменения в MongoDB</button>
+				<button onClick={createContentToMongoDB} className="bg-green-500 rounded p-2 text-white hover:bg-green-400" >Создать</button>
+				<button onClick={loadContentFromMongoDB} className="bg-sky-500 rounded p-2 text-white hover:bg-sky-400 " >Загрузить</button>
+				<button onClick={saveInsToMongoDB} className="bg-emerald-500 rounded p-2 text-white hover:bg-emerald-400 " > Сохранить</button>
 			</div>
 		</div>
 	);
