@@ -33,5 +33,33 @@
   }
   .toolbar-class {
 	border: 1px solid #0fd319;
-	background: #0f172a;
+	background-color: rgb(255, 5, 5);
   }
+
+  .rdw-editor-toolbar {
+    background-color: gray; /* Новый цвет панели инструментов */
+    /* Дополнительные стили по вашему выбору */
+}
+
+.wrapper-class .rdw-editor-toolbar {
+    background-color: rgb(30 41 59); 
+	border: none; 
+	
+	/*
+	 Новый цвет панели инструментов */
+    /* Дополнительные стили по вашему выбору */
+}
+
+
+ 
+.wrapper-class .rdw-editor-toolbar  .rdw-option-wrapper {
+	background-color: white;
+	border: none; 
+	color: white;
+
+}
+
+.toolbar-class img {
+    /* Ваши стили для изображений, представляющих иконки */
+ 
+}

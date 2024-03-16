@@ -6,7 +6,13 @@ import axios from 'axios';
 
 
 const MyEditorComponent = () => {
+
 	const [editorState, setEditorState] = useState(EditorState.createEmpty());
+
+	const [loadedContent, setLoadedContent] = useState('');
+	const [loadedEditorState, setLoadedEditorState] = useState(EditorState.createEmpty());
+
+
 
 	// Функция для обновления состояния редактора при вводе текста
 	const handleEditorStateChange = (newEditorState) => {
@@ -90,6 +96,41 @@ const MyEditorComponent = () => {
 
 
 
+	const loadArticleFromMongoDB = async () => {
+		try {
+			// Получаем данные из сервера, содержащие сохраненное содержимое
+			const response = await axios.get('https://btw-server.up.railway.app/api/ins/65efdbf0eaaf0c8dea5fdd33');
+			console.log(response.data);
+
+			const { body } = response.data;
+
+			console.log(body);
+
+			// Просто устанавливаем содержимое в состояние вашего компонента как текст
+			setLoadedContent(body);
+
+			const contentState = convertFromRaw(JSON.parse(body));
+			const newEditorState = EditorState.createWithContent(contentState);
+			setLoadedEditorState(newEditorState);
+
+			console.log('Содержимое успешно загружено из базы MongoDB.');
+		} catch (error) {
+			console.error('Произошла ошибка:', error);
+		}
+	};
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -145,6 +186,9 @@ const MyEditorComponent = () => {
 				wrapperClassName="wrapper-class"
 				editorClassName="editor-class"
 				toolbarClassName="toolbar-class"
+				localization={{
+					locale: 'ru',
+				}}
 				toolbar={{
 					// image: {
 					// 	uploadCallback: uploadImageCallback,
@@ -154,10 +198,10 @@ const MyEditorComponent = () => {
 					inline: {
 						options: ['bold', 'italic', 'underline', 'strikethrough'],
 					},
-					// blockType: {
-					// 	inDropdown: true,
-					// 	options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'],
-					// },
+					blockType: {
+						inDropdown: true,
+						options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'],
+					},
 					fontSize: {
 						options: [8, 10, 12, 14, 16, 18, 24, 30, 36, 48, 60, 72, 96],
 					},
@@ -178,7 +222,7 @@ const MyEditorComponent = () => {
 						className: undefined,
 						component: undefined,
 						popupClassName: undefined,
-						colors: ['rgb(239 68 68)', 'rgb(0 0 0)', 'rgb(255 255 255)', 'rgb(248 250 252)' ],
+						colors: ['rgb(239 68 68)', 'rgb(0 0 0)', 'rgb(255 255 255)', 'rgb(248 250 252)'],
 					},
 
 
@@ -187,12 +231,36 @@ const MyEditorComponent = () => {
 			/>
 
 			<div
-				className="grid grid-cols-3 gap-2 p-2"
+				className="grid grid-cols-4 gap-2 p-2"
 			>
 				<button onClick={createContentToMongoDB} className="bg-green-500 rounded p-2 text-white hover:bg-green-400" >Создать</button>
 				<button onClick={loadContentFromMongoDB} className="bg-sky-500 rounded p-2 text-white hover:bg-sky-400 " >Загрузить</button>
 				<button onClick={saveInsToMongoDB} className="bg-emerald-500 rounded p-2 text-white hover:bg-emerald-400 " > Сохранить</button>
+				<button onClick={loadArticleFromMongoDB} className="bg-pink-500 rounded p-2 text-white hover:bg-pink-400 " > Статья</button>
 			</div>
+			<div>
+				{/* Здесь выводим загруженный текст в виде статьи */}
+				<article
+					className="text-white"
+				>
+					<h1>Заголовок статьи</h1>
+
+
+					<Editor
+						editorState={loadedEditorState}
+						wrapperClassName="wrapper-class"
+						editorClassName="editor-class"
+						toolbarClassName="toolbar-class"
+						readOnly
+						toolbarHidden
+					/>
+				</article>
+			</div>
+
+
+
+
+
 		</div>
 	);
 };
