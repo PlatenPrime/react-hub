@@ -190,10 +190,10 @@ const MyEditorComponent = () => {
 					locale: 'ru',
 				}}
 				toolbar={{
-					// image: {
-					// 	uploadCallback: uploadImageCallback,
-					// 	alt: { present: true, mandatory: true },
-					// },
+					image: {
+						uploadCallback: uploadImageCallback,
+						alt: { present: true, mandatory: true },
+					},
 					options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'link', 'embedded', 'emoji', 'image', 'remove', 'history'],
 					inline: {
 						options: ['bold', 'italic', 'underline', 'strikethrough'],
