@@ -4,6 +4,7 @@ import './App.css';
 
 import MyEditor from "./components/Editor"
 import ImageUploader from './components/ImageUploader';
+import Editor from './components/QuillEditor/Editor';
 
 
 
@@ -20,7 +21,10 @@ function App() {
 				className="w-1/2 flex justify-center mx-auto"
 			>
 				{/* <MyEditor /> */}
-				<ImageUploader />
+				{/* <ImageUploader /> */}
+
+
+				<Editor />
 			</div>
 
 		</div>
