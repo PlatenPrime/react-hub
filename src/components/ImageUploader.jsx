@@ -11,7 +11,7 @@ const ImageUploader = () => {
 			const response = await fetch('https://api.imgur.com/3/image', {
 				method: 'POST',
 				headers: {
-					Authorization: 'Client-ID 86f656ab03b0dcf', // Вставьте ваш Client ID Imgur
+					Authorization: 'Client-ID 1db65d3bddf681a', // Вставьте ваш Client ID Imgur
 				},
 				body: formData,
 			});
