@@ -11,7 +11,10 @@ import styles from "./styles.module.css";
 
 const Editor = () => {
 	// Editor state
-	const [value, setValue] = useState("");
+	const [value, setValue] = useState("<TestBlock>Тестовый параграф</TestBlock>");
+
+	console.log(value);
+	
 
 	// Editor ref
 	const quill = useRef();
@@ -20,6 +23,11 @@ const Editor = () => {
 	function handler() {
 		console.log(value);
 	}
+
+
+
+
+
 
 	const imageHandler = useCallback(() => {
 		const input = document.createElement("input");
@@ -35,11 +43,15 @@ const Editor = () => {
 				const formData = new FormData();
 				formData.append("image", file);
 
-				const response = await axios.post("https://api.imgur.com/3/image", formData, {
+				const response = await fetch('https://api.imgur.com/3/image', {
+					method: 'POST',
 					headers: {
-						Authorization: "Client-ID 	1db65d3bddf681a", // Замени YOUR_CLIENT_ID_HERE на свой клиентский идентификатор Imgur
+						Authorization: 'Client-ID 1db65d3bddf681a', // Вставьте ваш Client ID Imgur
 					},
+					body: formData,
 				});
+
+				console.log(response);
 
 				const imageUrl = response.data.data.link;
 				const quillEditor = quill.current.getEditor();
@@ -50,6 +62,11 @@ const Editor = () => {
 			}
 		};
 	}, []);
+
+
+
+
+
 
 	const modules = useMemo(
 		() => ({
@@ -114,3 +131,10 @@ const Editor = () => {
 };
 
 export default Editor;
+
+
+
+
+function TestBlock({children}) {
+	return <h1 className="border-4 border-red-500 p-4 bg-blue-500"> {children}</h1>
+}
