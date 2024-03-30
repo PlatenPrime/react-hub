@@ -12,6 +12,13 @@ const Editor = () => {
 	// Editor state
 	const [value, setValue] = useState(`<a href="https://music.youtube.com/">Ссылка на музику</a>`);
 
+	console.log(value);
+
+
+	const handleUpdateState = () => {
+		setValue(prev => prev + `<img  src="https://m.media-amazon.com/images/I/61M2NEfcPkL._AC_UF894,1000_QL80_.jpg" />`)
+	}
+
 	// Editor ref
 	const quill = useRef();
 
@@ -31,15 +38,15 @@ const Editor = () => {
 		input.setAttribute("type", "file");
 		input.setAttribute("accept", "image/*");
 		input.click();
-	
+
 		// When a file is selected
 		input.onchange = async () => {
 			const file = input.files[0];
-	
+
 			// Upload the image to Imgur using Imgur API
 			const formData = new FormData();
 			formData.append("image", file);
-	
+
 			try {
 				const response = await fetch("https://api.imgur.com/3/image", {
 					method: "POST",
@@ -48,16 +55,16 @@ const Editor = () => {
 					},
 					body: formData,
 				});
-	
-				if (!response.ok) {
-					throw new Error("Failed to upload image to Imgur");
-				}
-	
+
+				// if (!response.ok) {
+				// 	throw new Error("Failed to upload image to Imgur");
+				// }
+
 				const data = await response.json();
-	
+
 				if (data.success) {
 					const imageUrl = data.data.link;
-	
+
 					// Insert the image into the editor with a figure tag
 					const quillEditor = quill.current.getEditor();
 					const range = quillEditor.getSelection(true);
@@ -70,7 +77,7 @@ const Editor = () => {
 			}
 		};
 	}, []);
-	
+
 
 
 
@@ -133,6 +140,9 @@ const Editor = () => {
 			/>
 			<button onClick={handler} className={styles.btn}>
 				Submit
+			</button>
+			<button onClick={handleUpdateState} className={styles.btn}>
+				Update
 			</button>
 		</div>
 	);
