@@ -21,7 +21,7 @@ function App() {
 				className="w-1/2 flex justify-center mx-auto"
 			>
 				{/* <MyEditor /> */}
-				{/* <ImageUploader /> */}
+				<ImageUploader />
 
 
 				<Editor />
