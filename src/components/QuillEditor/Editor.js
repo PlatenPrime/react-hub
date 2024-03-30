@@ -31,15 +31,15 @@ const Editor = () => {
 		input.setAttribute("type", "file");
 		input.setAttribute("accept", "image/*");
 		input.click();
-
+	
 		// When a file is selected
 		input.onchange = async () => {
 			const file = input.files[0];
-
+	
 			// Upload the image to Imgur using Imgur API
 			const formData = new FormData();
 			formData.append("image", file);
-
+	
 			try {
 				const response = await fetch("https://api.imgur.com/3/image", {
 					method: "POST",
@@ -48,28 +48,29 @@ const Editor = () => {
 					},
 					body: formData,
 				});
-
+	
+				if (!response.ok) {
+					throw new Error("Failed to upload image to Imgur");
+				}
+	
 				const data = await response.json();
-
+	
 				if (data.success) {
 					const imageUrl = data.data.link;
-
+	
 					// Insert the image into the editor with a figure tag
 					const quillEditor = quill.current.getEditor();
 					const range = quillEditor.getSelection(true);
 					quillEditor.insertEmbed(range.index, "figure", imageUrl, "user");
 				} else {
-					console.error("Failed to upload image to Imgur");
+					throw new Error("Imgur API returned an error: " + data.data.error);
 				}
 			} catch (error) {
 				console.error("Error uploading image:", error);
 			}
 		};
 	}, []);
-
-
-
-
+	
 
 
 
