@@ -1,101 +1,110 @@
-import { useCallback, useMemo, useRef, useState } from "react";
-import QuillEditor from "react-quill";
-import axios from 'axios'; // Import axios for making HTTP requests
+import React, { useState } from 'react';
+import ReactQuill, { Quill } from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
-import "react-quill/dist/quill.snow.css";
-import styles from "./styles.module.css";
+const ImageUpload = Quill.import('formats/image');
 
-const Editor = () => {
-    const [value, setValue] = useState(`<a href="https://music.youtube.com/">Ссылка на музику</a>`);
+class CustomImageBlot extends ImageUpload {
+	static create(value) {
+		let node = super.create(value);
+		node.setAttribute('alt', value.alt);
+		node.setAttribute('title', value.title);
+		return node;
+	}
+}
 
-    console.log(value);
+Quill.register(CustomImageBlot);
 
-    const handleUpdateState = () => {
-        setValue(prev => prev + `<img  src="https://m.media-amazon.com/images/I/61M2NEfcPkL._AC_UF894,1000_QL80_.jpg" />`)
-    }
+const QuillEditor = () => {
+	const [editorHtml, setEditorHtml] = useState('');
+	const [imgUrl, setImgUrl] = useState('');
 
-    const quill = useRef();
+	const handleImageUpload = async (file) => {
+		try {
+			const formData = new FormData();
+			formData.append('image', file);
 
-    // Function to handle image upload to Imgur
-    const imageHandler = useCallback(async (image) => {
-        const formData = new FormData();
-        formData.append('image', image);
+			const response = await fetch('https://api.imgur.com/3/image', {
+				method: 'POST',
+				headers: {
+					Authorization: 'Client-ID 1db65d3bddf681a', // Replace YOUR_IMGUR_CLIENT_ID with your actual Imgur client ID
+				},
+				body: formData,
+			});
 
-        try {
-            const response = await axios.post('https://api.imgur.com/3/image', formData, {
-                headers: {
-                    'Authorization': 'Client-ID 1db65d3bddf681a' // Replace YOUR_CLIENT_ID with your actual Imgur client ID
-                }
-            });
+			const data = await response.json();
+			const imageUrl = data.data.link;
+			setImgUrl(imageUrl);
+			insertToEditor(imageUrl);
+		} catch (error) {
+			console.error('Error uploading image to Imgur:', error);
+		}
+	};
 
-            const imageUrl = response.data.data.link;
+	const insertToEditor = (imageUrl) => {
+		const range = quillRef.getEditor().getSelection();
+		quillRef.getEditor().insertEmbed(range ? range.index : 0, 'image', imageUrl, 'user');
+	};
 
-            // Insert the image into the editor
-            const editor = quill.current.getEditor();
-            const index = (quill.current.editor.getSelection() || {}).index || quill.current.editor.getLength();
-            editor.insertEmbed(index, 'image', imageUrl);
-        } catch (error) {
-            console.error('Error uploading image:', error);
-        }
-    }, []);
+	const modules = {
+		toolbar: {
+			container: [
+				[{ 'header': [1, 2, false] }],
+				['bold', 'italic', 'underline', 'strike', 'blockquote'],
+				[{ 'color': [] }, { 'background': [] }],
+				[{ 'align': [] }],
+				[{ 'list': 'ordered' }, { 'list': 'bullet' }],
+				['link', 'image'],
+				['clean']
+			],
+			handlers: {
+				image: () => {
+					const input = document.createElement('input');
+					input.setAttribute('type', 'file');
+					input.setAttribute('accept', 'image/*');
+					input.click();
+					input.onchange = async () => {
+						const file = input.files[0];
+						handleImageUpload(file);
+					};
+				},
+			},
+		},
+	};
 
-    const modules = useMemo(() => ({
-        toolbar: {
-            container: [
-                [{ header: [2, 3, 4, false] }],
-                ["bold", "italic", "underline", "blockquote"],
-                [{ color: [] }],
-                [
-                    { list: "ordered" },
-                    { list: "bullet" },
-                    { indent: "-1" },
-                    { indent: "+1" },
-                ],
-                ["link", "image"],
-                ["clean"],
-            ],
-            handlers: {
-                image: imageHandler,
-            },
-        },
-        clipboard: {
-            matchVisual: true,
-        },
-    }), [imageHandler]);
+	const formats = [
+		'header', 'bold', 'italic', 'underline', 'strike', 'blockquote',
+		'color', 'background',
+		'align',
+		'list', 'bullet',
+		'link', 'image'
+	];
 
-    const formats = [
-        "header",
-        "bold",
-        "italic",
-        "underline",
-        "strike",
-        "blockquote",
-        "list",
-        "bullet",
-        "indent",
-        "link",
-        "image",
-        "color",
-        "clean",
-    ];
+	const handleChange = (html) => {
+		setEditorHtml(html);
+	};
 
-    return (
-        <div className={styles.wrapper}>
-            <label className={styles.label}>Editor Content</label>
-            <QuillEditor
-                ref={(el) => (quill.current = el)}
-                className={styles.editor}
-                theme="snow"
-                value={value}
-                formats={formats}
-                modules={modules}
-                onChange={(value) => setValue(value)}
-            />
-            <button onClick={handleUpdateState} className={styles.btn}>
-                Update
-            </button>
-        </div>
-    );
+	let quillRef;
+
+	const handleQuillRef = (ref) => {
+		if (ref) {
+			quillRef = ref;
+		}
+	};
+
+	return (
+		<div>
+			<ReactQuill
+				ref={handleQuillRef}
+				theme="snow"
+				value={editorHtml}
+				onChange={handleChange}
+				modules={modules}
+				formats={formats}
+			/>
+			{imgUrl && <img src={imgUrl} alt="Uploaded" />}
+		</div>
+	);
 };
 
-export default Editor;
+export default QuillEditor;
