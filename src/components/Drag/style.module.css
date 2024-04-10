@@ -1,0 +1,15 @@
+.container {
+background-color: #252525;
+min-height: 100vh;
+}
+
+.card {
+	width: 400px;
+	height: 400px;
+	background-color: rgb(12, 214, 12);
+	border-radius: 0.5rem;
+	cursor: pointer;
+	position: fixed;
+	
+
+}
